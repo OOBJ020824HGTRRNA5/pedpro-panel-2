@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UMER X CHEAT</title>
+  <style>
+    body {
+      background: #111;
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      padding-top: 50px;
+    }
+
+    .menu {
+      background: linear-gradient(to bottom, #2c2c2c, #1a1a1a);
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .menu h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .option {
+      background: #333;
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .option span {
+      display: block;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 20px;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #555;
+      transition: .4s;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #0f0;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="menu">
+  <h2>PEDPRO X CHEAT</h2>
+
+  <div class="option">
+    <div>
+      AIMBOT<br>
+      <span>เปิดในเกมส์</span>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="option">
+    <div>
+      DPI บัค<br>
+      <span>เปิดหน้าล็อบบี้</span>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="option">
+    <div>
+      โหมดจอไว DPI 1600<br>
+      <span>เปิดหน้าล็อบบี้</span>
+    </div>
+    <label class="toggle">
+      <input type="checkbox">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+</body>
+</html>
