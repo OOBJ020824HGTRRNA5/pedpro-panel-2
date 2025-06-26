@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		  
+		<meta charset="UTF-8">
+		  
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		  <title>YOGESH_H4X Dashboard</title>
+		  <style>
+			/* Global Styles */
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+				font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+				transition: all 0.3s ease;
+			}
+
+			body {
+				background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+				min-height: 100vh;
+				overflow-x: hidden;
+				color: #fff;
+			}
+
+			/* Particles Canvas */
+			#particles-canvas {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 0;
+				/* Esto es crucial para iOS: evita que el scroll de la página bloquee el movimiento del canvas */
+				touch-action: none;
+			}
+
+			/* Page Container */
+			.page-container {
+				position: relative;
+				z-index: 1;
+				width: 100%;
+				min-height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 20px;
+			}
+
+			/* Login Page Styles */
+			#login-page {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100%;
+				min-height: 100vh;
+			}
+
+			.login-container {
+				background: rgba(30, 30, 60, 0.8);
+				backdrop-filter: blur(10px);
+				border-radius: 16px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+				padding: 40px;
+				width: 100%;
+				max-width: 420px;
+				position: relative;
+				transform: translateY(0);
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+				overflow: hidden;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.login-container:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+			}
+
+			.login-container::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 5px;
+				background: linear-gradient(90deg, #ff4e50, #f9d423);
+			}
+
+			.login-header {
+				margin-bottom: 30px;
+				text-align: center;
+				position: relative;
+			}
+
+			.login-header h1 {
+				font-size: 28px;
+				font-weight: 700;
+				margin-bottom: 10px;
+				background: linear-gradient(90deg, #ff4e50, #f9d423);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+
+			.login-header p {
+				color: #ccc;
+				font-size: 16px;
+			}
+
+			.form-group {
+				margin-bottom: 24px;
+				position: relative;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 8px;
+				color: #ddd;
+				font-weight: 500;
+				transition: color 0.3s;
+			}
+
+			.form-group:focus-within label {
+				color: #f9d423;
+			}
+
+			input {
+				width: 100%;
+				padding: 14px;
+				border: 2px solid rgba(255, 255, 255, 0.1);
+				border-radius: 8px;
+				font-size: 16px;
+				transition: all 0.3s;
+				background: rgba(30, 30, 60, 0.5);
+				color: #fff;
+			}
+
+			input:focus {
+				outline: none;
+				border-color: #f9d423;
+				box-shadow: 0 0 0 3px rgba(249, 212, 35, 0.2);
+			}
+
+			button {
+				background: linear-gradient(45deg, #ff4e50, #f9d423);
+				color: white;
+				border: none;
+				border-radius: 8px;
+				padding: 14px;
+				width: 100%;
+				font-size: 16px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: all 0.3s;
+				position: relative;
+				overflow: hidden;
+			}
+
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 7px 14px rgba(255, 78, 80, 0.4);
+			}
+
+			button:active {
+				transform: translateY(1px);
+			}
+
+			button span {
+				position: relative;
+				z-index: 1;
+			}
+
+			.feedback {
+				margin-top: 24px;
+				padding: 14px;
+				border-radius: 8px;
+				text-align: center;
+				display: none;
+				animation: fadeIn 0.5s ease;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(-10px);
+				}
+
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.success {
+				background-color: rgba(16, 185, 129, 0.1);
+				color: #10b981;
+				border: 1px solid rgba(16, 185, 129, 0.4);
+			}
+
+			.error {
+				background-color: rgba(239, 68, 68, 0.1);
+				color: #ef4444;
+				border: 1px solid rgba(239, 68, 68, 0.4);
+			}
+
+			.input-icon {
+				position: absolute;
+				right: 14px;
+				top: 40px;
+				color: #999;
+			}
+
+			/* Dashboard Styles */
+			#dashboard-page {
+				display: none;
+				width: 100%;
+				min-height: 100vh;
+				padding: 20px;
+			}
+
+			.dashboard-container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+
+			.dashboard-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 30px;
+				padding-bottom: 15px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.dashboard-header h1 {
+				font-size: 32px;
+				font-weight: 700;
+				background: linear-gradient(90deg, #ff4e50, #f9d423);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+
+			.logout-btn {
+				background: rgba(255, 78, 80, 0.2);
+				color: #ff4e50;
+				border: 1px solid rgba(255, 78, 80, 0.4);
+				padding: 8px 16px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 600;
+				transition: all 0.3s;
+				width: auto;
+			}
+
+			.logout-btn:hover {
+				background: rgba(255, 78, 80, 0.3);
+				transform: translateY(-2px);
+			}
+
+			.dashboard-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+				gap: 20px;
+			}
+
+			.dashboard-card {
+				background: rgba(30, 30, 60, 0.8);
+				backdrop-filter: blur(10px);
+				border-radius: 12px;
+				padding: 20px;
+				box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				transition: transform 0.3s, box-shadow 0.3s;
+			}
+
+			.dashboard-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+			}
+
+			.card-header {
+				margin-bottom: 20px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.card-header h2 {
+				font-size: 20px;
+				font-weight: 600;
+				color: #f9d423;
+			}
+
+			.card-header .risk-tag {
+				display: inline-block;
+				background: rgba(255, 78, 80, 0.2);
+				color: #ff4e50;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 12px;
+				margin-left: 8px;
+				font-weight: 600;
+			}
+
+			.card-header .safe-tag {
+				display: inline-block;
+				background: rgba(16, 185, 129, 0.2);
+				color: #10b981;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 12px;
+				margin-left: 8px;
+				font-weight: 600;
+			}
+
+			.feature-list {
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+			}
+
+			.feature-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.feature-name {
+				font-size: 16px;
+				font-weight: 500;
+				color: #fff;
+				display: flex;
+				align-items: center;
+			}
+
+			.feature-name .tag {
+				font-size: 11px;
+				padding: 2px 6px;
+				border-radius: 4px;
+				margin-left: 8px;
+			}
+
+			.feature-name .risk-tag {
+				background: rgba(255, 78, 80, 0.2);
+				color: #ff4e50;
+			}
+
+			.feature-name .safe-tag {
+				background: rgba(16, 185, 129, 0.2);
+				color: #10b981;
+			}
+
+			.feature-name .new-tag {
+				background: rgba(249, 212, 35, 0.2);
+				color: #f9d423;
+			}
+
+			/* Toggle Switch */
+			.toggle-switch {
+				position: relative;
+				display: inline-block;
+				width: 50px;
+				height: 26px;
+			}
+
+			.toggle-switch input {
+				opacity: 0;
+				width: 0;
+				height: 0;
+			}
+
+			.toggle-slider {
+				position: absolute;
+				cursor: pointer;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: rgba(255, 255, 255, 0.1);
+				transition: .4s;
+				border-radius: 34px;
+			}
+
+			.toggle-slider:before {
+				position: absolute;
+				content: "";
+				height: 18px;
+				width: 18px;
+				left: 4px;
+				bottom: 4px;
+				background-color: white;
+				transition: .4s;
+				border-radius: 50%;
+			}
+
+			input:checked+.toggle-slider {
+				background-color: #f9d423;
+			}
+
+			input:checked+.toggle-slider:before {
+				transform: translateX(24px);
+			}
+
+			.status-indicator {
+				display: inline-block;
+				padding: 4px 8px;
+				border-radius: 4px;
+				font-size: 12px;
+				font-weight: 600;
+				margin-left: 10px;
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+
+			.status-active {
+				background: rgba(16, 185, 129, 0.2);
+				color: #10b981;
+				opacity: 1;
+			}
+
+			.status-inactive {
+				background: rgba(255, 78, 80, 0.2);
+				color: #ff4e50;
+				opacity: 0;
+			}
+
+			.keybind-btn {
+				background: rgba(255, 255, 255, 0.1);
+				color: #fff;
+				border: none;
+				border-radius: 4px;
+				padding: 6px 12px;
+				font-size: 12px;
+				cursor: pointer;
+				transition: all 0.3s;
+				width: auto;
+			}
+
+			.keybind-btn:hover {
+				background: rgba(255, 255, 255, 0.2);
+			}
+
+			/* Loading Animation */
+			.loading-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.8);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 1000;
+				opacity: 0;
+				visibility: hidden;
+				transition: opacity 0.5s, visibility 0.5s;
+			}
+
+			.loading-overlay.active {
+				opacity: 1;
+				visibility: visible;
+			}
+
+			.loader {
+				width: 80px;
+				height: 80px;
+				border: 5px solid rgba(255, 255, 255, 0.1);
+				border-radius: 50%;
+				border-top: 5px solid #f9d423;
+				animation: spin 1s linear infinite;
+			}
+
+			.loader-text {
+				position: absolute;
+				margin-top: 100px;
+				color: #fff;
+				font-size: 18px;
+				font-weight: 600;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+
+			/* Responsive Styles */
+			@media (max-width: 768px) {
+				.dashboard-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.dashboard-header {
+					flex-direction: column;
+					gap: 15px;
+					align-items: flex-start;
+				}
+
+				.login-container {
+					padding: 30px;
+				}
+			}
+
+			/* Floating Elements Animation */
+			.floating-element {
+				position: absolute;
+				background: rgba(255, 255, 255, 0.03);
+				border-radius: 50%;
+				pointer-events: none;
+				z-index: -1;
+			}
+
+			.floating-1 {
+				width: 150px;
+				height: 150px;
+				top: 10%;
+				right: 10%;
+				animation: float 15s ease-in-out infinite;
+			}
+
+			.floating-2 {
+				width: 100px;
+				height: 100px;
+				bottom: 10%;
+				left: 10%;
+				animation: float 12s ease-in-out infinite;
+			}
+
+			.floating-3 {
+				width: 80px;
+				height: 80px;
+				top: 50%;
+				left: 15%;
+				animation: float 10s ease-in-out infinite;
+			}
+
+			@keyframes float {
+				0% {
+					transform: translate(0, 0) rotate(0deg);
+				}
+
+				25% {
+					transform: translate(10px, 15px) rotate(5deg);
+				}
+
+				50% {
+					transform: translate(0, 30px) rotate(0deg);
+				}
+
+				75% {
+					transform: translate(-10px, 15px) rotate(-5deg);
+				}
+
+				100% {
+					transform: translate(0, 0) rotate(0deg);
+				}
+			}
+
+			/* Notification */
+			.notification {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				background: rgba(16, 185, 129, 0.9);
+				color: white;
+				padding: 15px 20px;
+				border-radius: 8px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+				transform: translateX(150%);
+				transition: transform 0.5s ease;
+				z-index: 1000;
+				max-width: 300px;
+			}
+
+			.notification.show {
+				transform: translateX(0);
+			}
+
+			.notification.error {
+				background: rgba(255, 78, 80, 0.9);
+			}
+		</style>
+	</head>
+
+	<body>
+		  <canvas id="particles-canvas"></canvas>
+		   
+		  <div class="floating-element floating-1"></div>
+		  <div class="floating-element floating-2"></div>
+		  <div class="floating-element floating-3"></div>
+		   
+		  <div class="page-container">
+			    <!-- Login Page -->
+			    <div id="login-page">
+				      <div class="login-container">
+					        <div class="login-header">
+						          <h1>YOGESH_H4X</h1>
+						          <p>Sign in to access your dashboard</p>
+						        </div>
+					         
+					        <form id="loginForm">
+						          <div class="form-group">
+							            <label for="username">Username</label>
+							            <input                type="text"                 id="username"                 name="username"                 placeholder="Enter your username"                 required               autocomplete="username"             >
+							            <div class="input-icon">👤</div>
+							          </div>
+						           
+						          <div class="form-group">
+							            <label for="password">Password</label>
+							            <input                type="password"                 id="password"                 name="password"                 placeholder="Enter your password"                 required               autocomplete="current-password"             >
+							            <div class="input-icon">🔒</div>
+							          </div>
+						           
+						          <button type="submit" id="loginButton"><span>Sign In</span></button>
+						        </form>
+					         
+					        <div id="feedback" class="feedback"></div>
+					      </div>
+				    </div>
+			     
+			    <!-- Dashboard Page -->
+			    <div id="dashboard-page">
+				      <div class="dashboard-container">
+					        <div class="dashboard-header">
+						          <h1>YOGESH_H4X Dashboard</h1>
+						          <button class="logout-btn" id="logoutBtn">Logout</button>
+						        </div>
+					         
+					        <div class="dashboard-grid">
+						          <!-- Apply on Login Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>APPLY ON LOGIN</h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">INTERNET</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="internet">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="internet">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">ANTICHEAT</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="anticheat">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="anticheat">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">EMULATOR BYPASS <span class="tag risk-tag">[RISK]</span></div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="emulator-bypass">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="emulator-bypass">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">STEP 1ST</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="step-1st">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="step-1st">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">STEP 2ND</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="step-2nd">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="step-2nd">Inactive</span>
+										                </div>
+									              </div>
+								            </div>
+							          </div>
+						           
+						          <!-- Function Menu Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>FUNCTION MENU <span class="safe-tag">[SAFE]</span></h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">AIMBOT HEAD <span class="tag safe-tag">[SAFE]</span></div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimbot-head">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="aimbot-head">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SNIPER FOV</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="sniper-fov">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="sniper-fov">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SNIPER SWITCH</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="sniper-switch">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="sniper-switch">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SNIPER TRACKING</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="sniper-tracking">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="sniper-tracking">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">CAMERA LEFT</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="camera-left">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="camera-left">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">M82B SWITCH</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="m82b-switch">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="m82b-switch">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">NO RECOIL</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="no-recoil">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="no-recoil">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">WALLHACK V1</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="wallhack-v1">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="wallhack-v1">Inactive</span>
+										                </div>
+									              </div>
+								            </div>
+							          </div>
+						           
+						          <!-- Visuals Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>VISUALS</h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">CHAMS MENU</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="chams-menu">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="chams-menu">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">ESP LINE</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="esp-line">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="esp-line">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">3D BOX</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="3d-box">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="3d-box">Inactive</span>
+										                </div>
+									              </div>
+								            </div>
+							          </div>
+						           
+						          <!-- Brutal Features Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>BRUTAL FEATURES <span class="risk-tag">[RISK]</span></h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">AIMFOV</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimfov">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="aimfov">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">AIMSCOPE ULTRA</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimscope-ultra">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="aimscope-ultra">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SPEED ULTRA</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="speed-ultra">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="speed-ultra">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">VISION 6X</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="vision-6x">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="vision-6x">Inactive</span>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">AIMBOT RISK <span class="tag new-tag">[NEW]</span></div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimbot-risk">
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                  <span class="status-indicator" data-status="aimbot-risk">Inactive</span>
+										                </div>
+									              </div>
+								            </div>
+							          </div>
+						           
+						          <!-- Keybinding Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>KEYBINDING</h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">HIDE PANEL</div>
+									                <button class="keybind-btn">None</button>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SHOW PANEL</div>
+									                <button class="keybind-btn">None</button>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">AIMBOT HEAD</div>
+									                <button class="keybind-btn">None</button>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">SNIPER FOV</div>
+									                <button class="keybind-btn">None</button>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">CAMERA LEFT</div>
+									                <button class="keybind-btn">None</button>
+									              </div>
+								            </div>
+							          </div>
+						           
+						          <!-- Coming Soon Card -->
+						          <div class="dashboard-card">
+							            <div class="card-header">
+								              <h2>COMING SOON</h2>
+								            </div>
+							            <div class="feature-list">
+								              <div class="feature-item">
+									                <div class="feature-name">AIMKILL</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimkill" disabled>
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                </div>
+									              </div>
+								               
+								              <div class="feature-item">
+									                <div class="feature-name">AIMSILENT</div>
+									                <div class="toggle-container">
+										                  <label class="toggle-switch">
+											                    <input type="checkbox" class="toggle-input" data-feature="aimsilent" disabled>
+											                    <span class="toggle-slider"></span>
+											                  </label>
+										                </div>
+									              </div>
+								            </div>
+							          </div>
+						        </div>
+					      </div>
+				    </div>
+			  </div>
+		   
+		  <!-- Loading Overlay -->
+		  <div class="loading-overlay" id="loadingOverlay">
+			    <div class="loader"></div>
+			    <div class="loader-text" id="loaderText">Loading Dashboard...</div>
+			  </div>
+		   
+		  <!-- Notification -->
+		  <div class="notification" id="notification"></div>
+		   
+		  <script>
+			document.addEventListener('DOMContentLoaded', function() {
+				// Elements
+				const loginPage = document.getElementById('login-page');
+				const dashboardPage = document.getElementById('dashboard-page');
+				const loginForm = document.getElementById('loginForm');
+				const loginButton = document.getElementById('loginButton');
+				const feedback = document.getElementById('feedback');
+				const loadingOverlay = document.getElementById('loadingOverlay');
+				const loaderText = document.getElementById('loaderText');
+				const logoutBtn = document.getElementById('logoutBtn');
+				const notification = document.getElementById('notification');
+
+				// Mock credentials
+				const mockCredentials = {
+					username: 'user',
+					password: 'password'
+				};
+
+				// Check if user is already logged in
+				const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+				if (isLoggedIn) {
+					loginPage.style.display = 'none';
+					dashboardPage.style.display = 'block';
+				}
+
+				// Login form submission
+				loginForm.addEventListener('submit', function(event) {
+					event.preventDefault();
+
+					const username = document.getElementById('username').value;
+					const password = document.getElementById('password').value;
+
+					// Clear previous feedback
+					feedback.className = 'feedback';
+					feedback.style.display = 'none';
+
+					// Add loading state to button
+					loginButton.innerHTML = '<span>Signing in...</span>';
+					loginButton.disabled = true;
+
+					// Simulate authentication
+					setTimeout(() => {
+						if (username === mockCredentials.username && password === mockCredentials.password) {
+							// Successful login
+							feedback.textContent = '✅ Login successful! Redirecting...';
+							feedback.classList.add('success');
+							feedback.style.display = 'block';
+
+							// Show loading overlay
+							setTimeout(() => {
+								loaderText.textContent = 'Loading Dashboard...';
+								loadingOverlay.classList.add('active');
+
+								// Redirect to dashboard after delay
+								setTimeout(() => {
+									loginPage.style.display = 'none';
+									dashboardPage.style.display = 'block';
+									loadingOverlay.classList.remove('active');
+
+									// Store login state
+									localStorage.setItem('isLoggedIn', 'true');
+
+									// Show welcome notification
+									showNotification('Welcome to AAYUSH X PNL Dashboard!');
+
+									// Reset login form and button
+									loginForm.reset();
+									loginButton.innerHTML = '<span>Sign In</span>';
+									loginButton.disabled = false;
+								}, 2000);
+							}, 1000);
+						} else {
+							// Failed login
+							feedback.textContent = '❌ Invalid username or password. Please try again.';
+							feedback.classList.add('error');
+							feedback.style.display = 'block';
+
+							loginButton.innerHTML = '<span>Sign In</span>';
+							loginButton.disabled = false;
+						}
+					}, 1000);
+				});
+
+				// Logout functionality
+				logoutBtn.addEventListener('click', function() {
+					// Show loading overlay
+					loaderText.textContent = 'Logging out...';
+					loadingOverlay.classList.add('active');
+
+					setTimeout(() => {
+						// Clear login state
+						localStorage.removeItem('isLoggedIn');
+
+						// Reset all toggles
+						const toggles = document.querySelectorAll('.toggle-input');
+						toggles.forEach(toggle => {
+							toggle.checked = false;
+						});
+
+						// Reset all status indicators. Nota importante: tenías `$`, lo cambié a `featureName` dinámico
+						const statusIndicators = document.querySelectorAll('.status-indicator');
+						statusIndicators.forEach(indicator => {
+							// Asegurarse de que el indicador está en estado inactivo visualmente
+							indicator.classList.remove('status-active');
+							indicator.textContent = 'Inactive';
+							indicator.classList.add('status-inactive'); // Añadir clase de inactivo si deseas que desaparezca
+						});
+
+						// Return to login page
+						dashboardPage.style.display = 'none';
+						loginPage.style.display = 'flex';
+						loadingOverlay.classList.remove('active');
+
+						// Reset login form and feedback
+						loginForm.reset();
+						feedback.style.display = 'none';
+						loginButton.innerHTML = '<span>Sign In</span>';
+						loginButton.disabled = false;
+
+						// Show notification
+						showNotification('You have been logged out successfully.', 'error');
+					}, 1500);
+				});
+
+				// Toggle switch functionality
+				// Corregido: `statusIndicator` estaba usando `$` en lugar de `featureName`
+				const toggleInputs = document.querySelectorAll('.toggle-input:not([disabled])');
+				toggleInputs.forEach(toggle => {
+					toggle.addEventListener('change', function() {
+						const featureName = this.getAttribute('data-feature');
+						const statusIndicator = document.querySelector(`[data-status="${featureName}"]`); // Corrected this line
+
+						if (this.checked) {
+							// Show loading overlay
+							loaderText.textContent = `Activating ${featureName.replace('-', ' ').toUpperCase()}...`;
+							loadingOverlay.classList.add('active');
+
+							// Simulate activation delay
+							setTimeout(() => {
+								loadingOverlay.classList.remove('active');
+
+								// Update status indicator
+								statusIndicator.textContent = 'Active';
+								statusIndicator.classList.remove('status-inactive'); // Ensure inactive is removed
+								statusIndicator.classList.add('status-active');
+
+								// Show notification
+								showNotification(`${featureName.replace('-', ' ').toUpperCase()} has been activated successfully!`);
+							}, Math.random() * 2000 + 1000); // Random delay between 1-3 seconds
+						} else {
+							// Update status indicator
+							statusIndicator.textContent = 'Inactive';
+							statusIndicator.classList.remove('status-active');
+							statusIndicator.classList.add('status-inactive'); // Ensure inactive is added
+
+							// Show notification
+							showNotification(`${featureName.replace('-', ' ').toUpperCase()} has been deactivated.`, 'error');
+						}
+					});
+				});
+
+				// Keybind buttons functionality
+				const keybindButtons = document.querySelectorAll('.keybind-btn');
+				keybindButtons.forEach(button => {
+					button.addEventListener('click', function() {
+						const originalText = this.textContent;
+						this.textContent = 'Press any key...';
+
+						const keyHandler = function(e) {
+							button.textContent = e.key.toUpperCase();
+							window.removeEventListener('keydown', keyHandler);
+
+							// Show notification
+							showNotification(`Keybind set to ${e.key.toUpperCase()}`);
+						};
+
+						window.addEventListener('keydown', keyHandler);
+
+						// Cancel if clicked elsewhere
+						const clickHandler = function(e) {
+							if (e.target !== button) {
+								button.textContent = originalText;
+								window.removeEventListener('keydown', keyHandler);
+								window.removeEventListener('click', clickHandler);
+							}
+						};
+
+						setTimeout(() => {
+							window.addEventListener('click', clickHandler);
+						}, 10);
+					});
+				});
+
+				// Notification function
+				function showNotification(message, type = 'success') {
+					notification.textContent = message;
+					notification.className = 'notification';
+					if (type === 'error') {
+						notification.classList.add('error');
+					}
+					notification.classList.add('show');
+
+					setTimeout(() => {
+						notification.classList.remove('show');
+					}, 3000);
+				}
+
+				// Particles effect
+				const canvas = document.getElementById('particles-canvas');
+				const ctx = canvas.getContext('2d');
+
+				// Set canvas size
+				function resizeCanvas() {
+					canvas.width = window.innerWidth;
+					canvas.height = window.innerHeight;
+				}
+
+				resizeCanvas();
+				window.addEventListener('resize', resizeCanvas);
+
+				// Particle properties
+				const particlesArray = [];
+				const numberOfParticles = 80;
+				const colors = ['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0.02)'];
+
+				// Mouse position
+				let mouse = {
+					x: null,
+					y: null,
+					radius: 150
+				};
+
+				window.addEventListener('mousemove', function(event) {
+					mouse.x = event.x;
+					mouse.y = event.y;
+				});
+
+				// --- INICIO DE MODIFICACIONES PARA iOS (TOUCH) ---
+
+				// Listener para eventos táctiles en el canvas
+				canvas.addEventListener('touchmove', function(event) {
+					// Evita el scroll o zoom por defecto mientras se interactúa con el canvas
+					event.preventDefault();
+					if (event.touches.length > 0) {
+						mouse.x = event.touches[0].clientX;
+						mouse.y = event.touches[0].clientY;
+					}
+				}, { passive: false }); // { passive: false } es importante para que preventDefault funcione
+
+				canvas.addEventListener('touchend', function() {
+					// Reinicia la posición del "ratón" cuando se levanta el dedo
+					mouse.x = null;
+					mouse.y = null;
+				});
+
+				// --- FIN DE MODIFICACIONES PARA iOS (TOUCH) ---
+
+				// Create particle class
+				class Particle {
+					constructor() {
+						this.x = Math.random() * canvas.width;
+						this.y = Math.random() * canvas.height;
+						this.size = Math.random() * 3 + 1;
+						this.speedX = Math.random() * 1 - 0.5;
+						this.speedY = Math.random() * 1 - 0.5;
+						this.color = colors[Math.floor(Math.random() * colors.length)];
+					}
+
+					// Update particle position
+					update() {
+						// Move particles
+						this.x += this.speedX;
+						this.y += this.speedY;
+
+						// Bounce off edges
+						if (this.x > canvas.width || this.x < 0) {
+							this.speedX = -this.speedX;
+						}
+						if (this.y > canvas.height || this.y < 0) {
+							this.speedY = -this.speedY;
+						}
+
+						// Mouse interaction (now also handles touch due to mouse.x/y update)
+						const dx = mouse.x - this.x;
+						const dy = mouse.y - this.y;
+						const distance = Math.sqrt(dx * dx + dy * dy);
+
+						if (distance < mouse.radius) {
+							const forceDirectionX = dx / distance;
+							const forceDirectionY = dy / distance;
+							const force = (mouse.radius - distance) / mouse.radius;
+
+							const directionX = forceDirectionX * force * 1;
+							const directionY = forceDirectionY * force * 1;
+
+							this.speedX -= directionX;
+							this.speedY -= directionY;
+						}
+					}
+
+					// Draw particle
+					draw() {
+						ctx.beginPath();
+						ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+						ctx.fillStyle = this.color;
+						ctx.fill();
+					}
+				}
+
+				// Create particles
+				function init() {
+					for (let i = 0; i < numberOfParticles; i++) {
+						particlesArray.push(new Particle());
+					}
+				}
+
+				// Animation loop
+				function animate() {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+					for (let i = 0; i < particlesArray.length; i++) {
+						particlesArray[i].update();
+						particlesArray[i].draw();
+
+						// Connect particles with lines
+						for (let j = i; j < particlesArray.length; j++) {
+							const dx = particlesArray[i].x - particlesArray[j].x;
+							const dy = particlesArray[i].y - particlesArray[j].y;
+							const distance = Math.sqrt(dx * dx + dy * dy);
+
+							if (distance < 100) {
+								ctx.beginPath();
+								ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 - distance/2000})`;
+								ctx.lineWidth = 0.5;
+								ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+								ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+								ctx.stroke();
+							}
+						}
+					}
+
+					requestAnimationFrame(animate);
+				}
+
+				init();
+				animate();
+			});
+		</script>
+	</body>
+
+</html>
